@@ -1,0 +1,264 @@
+To adapt the shopping list project code to generate the mark list for Masinde High School, we can use a similar structure and functionality. Below is the modified code:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mark List Generator - Masinde High School</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+    .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .input-container {
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    input[type="text"],
+    input[type="number"] {
+        width: calc(100% - 22px);
+        padding: 10px;
+        margin-bottom: 10px;
+        border: none;
+        border-bottom: 1px solid #ccc;
+        outline: none;
+    }
+    input[type="number"] {
+        width: calc(50% - 10px);
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    button:hover {
+        background-color: #45a049;
+    }
+    #list {
+        margin-top: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+    th {
+        background-color: #f2f2f2;
+    }
+    .total {
+        font-weight: bold;
+    }
+    .btn-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .btn-container button {
+        margin: 0 10px;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Mark List Generator - Masinde High School</h1>
+    <div class="input-container">
+        <input type="text" id="teacherName" placeholder="Enter Teacher's Name">
+    </div>
+    <div class="input-container" id="students">
+        <input type="text" class="admissionNo" placeholder="Admission No">
+        <input type="text" class="studentName" placeholder="Student's Name">
+        <input type="number" class="mathematics" placeholder="Mathematics">
+        <input type="number" class="english" placeholder="English">
+        <input type="number" class="kiswahili" placeholder="Kiswahili">
+        <input type="number" class="biology" placeholder="Biology">
+        <input type="number" class="chemistry" placeholder="Chemistry">
+        <input type="number" class="physics" placeholder="Physics">
+        <input type="number" class="computer" placeholder="Computer">
+    </div>
+    <button onclick="addStudent()">Add Student</button>
+    <button onclick="generateMarkList()">Generate List</button>
+    <div id="list" style="display: none;">
+        <h2 id="list-title"></h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Admission No</th>
+                    <th>Student's Name</th>
+                    <th>Mathematics</th>
+                    <th>English</th>
+                    <th>Kiswahili</th>
+                    <th>Biology</th>
+                    <th>Chemistry</th>
+                    <th>Physics</th>
+                    <th>Computer</th>
+                    <th>Total Marks</th>
+                    <th>Average Marks</th>
+                </tr>
+            </thead>
+            <tbody id="list-body"></tbody>
+        </table>
+        <div class="btn-container">
+            <button onclick="printMarkList()">Print List</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let studentList = [];
+    let rank = 1;
+
+    function addStudent() {
+        const studentsDiv = document.getElementById('students');
+        const admissionNo = document.createElement('input');
+        admissionNo.type = 'text';
+        admissionNo.className = 'admissionNo';
+        admissionNo.placeholder = 'Admission No';
+        const studentName = document.createElement('input');
+        studentName.type = 'text';
+        studentName.className = 'studentName';
+        studentName.placeholder = 'Student\'s Name';
+        const mathematics = document.createElement('input');
+        mathematics.type = 'number';
+        mathematics.className = 'mathematics';
+        mathematics.placeholder = 'Mathematics';
+        const english = document.createElement('input');
+        english.type = 'number';
+        english.className = 'english';
+        english.placeholder = 'English';
+        const kiswahili = document.createElement('input');
+        kiswahili.type = 'number';
+        kiswahili.className = 'kiswahili';
+        kiswahili.placeholder = 'Kiswahili';
+        const biology = document.createElement('input');
+        biology.type = 'number';
+        biology.className = 'biology';
+        biology.placeholder = 'Biology';
+        const chemistry = document.createElement('input');
+        chemistry.type = 'number';
+        chemistry.className = 'chemistry';
+        chemistry.placeholder = 'Chemistry';
+        const physics = document.createElement('input');
+        physics.type = 'number';
+        physics.className = 'physics';
+        physics.placeholder = 'Physics';
+        const computer = document.createElement('input');
+        computer.type = 'number';
+        computer.className = 'computer';
+        computer.placeholder = 'Computer';
+        studentsDiv.appendChild(admissionNo);
+        studentsDiv.appendChild(studentName);
+        studentsDiv.appendChild(mathematics);
+        studentsDiv.appendChild(english);
+        studentsDiv.appendChild(kiswahili);
+        studentsDiv.appendChild(biology);
+        studentsDiv.appendChild(chemistry);
+        studentsDiv.appendChild(physics);
+        studentsDiv.appendChild(computer);
+    }
+
+    function generateMarkList() {
+        const teacherName = document.getElementById('teacherName').value;
+        document.getElementById('list-title').textContent = `Mark List for Masinde High School (Teacher: ${teacherName})`;
+        const admissionNos = document.getElementsByClassName('admissionNo');
+        const studentNames = document.getElementsByClassName('studentName');
+        const mathematicsMarks = document.getElementsByClassName('mathematics');
+        const englishMarks = document.getElementsByClassName('english');
+        const kiswahiliMarks = document.getElementsByClassName('kiswahili');
+        const biologyMarks = document.getElementsByClassName('biology');
+        const chemistryMarks = document.getElementsByClassName('chemistry');
+        const physicsMarks = document.getElementsByClassName('physics');
+        const computerMarks = document.getElementsByClassName('computer');
+        const listBody = document.getElementById('list-body');
+        listBody.innerHTML = '';
+        studentList = [];
+        rank = 1;
+        for (let i = 0; i < admissionNos.length; i++) {
+            const admissionNo = admissionNos[i].value.trim();
+            const studentName = studentNames[i].value.trim();
+            const mathematics = parseInt(mathematicsMarks[i].value.trim());
+            const english = parseInt(englishMarks[i].value.trim());
+            const kiswahili = parseInt(kiswahiliMarks[i].value.trim());
+            const biology = parseInt(biologyMarks[i].value.trim());
+            const chemistry = parseInt(chemistryMarks[i].value.trim());
+            const physics = parseInt(physicsMarks[i].value.trim());
+            const computer = parseInt(computerMarks[i].value.trim());
+            const totalMarks = mathematics + english + kiswahili + biology + chemistry + physics + computer;
+            const averageMarks = totalMarks / 7;
+            if (admissionNo && studentName && !isNaN(mathematics) && !isNaN(english) && !isNaN(kiswahili) && !isNaN(biology) && !isNaN(chemistry) && !isNaN(physics) && !isNaN(computer)) {
+                const student = {
+                    rank: rank,
+                    admissionNo: admissionNo,
+                    studentName: studentName,
+                    mathematics: mathematics,
+                    english: english,
+                    kiswahili: kiswahili,
+                    biology: biology,
+                    chemistry: chemistry,
+                    physics: physics,
+                    computer: computer,
+                    totalMarks: totalMarks,
+                    averageMarks: averageMarks.toFixed(2)
+                };
+                studentList.push(student);
+                rank++;
+            }
+        }
+        studentList.sort((a, b) => b.totalMarks - a.totalMarks);
+        studentList.forEach(student => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${student.rank}</td>
+                <td>${student.admissionNo}</td>
+                <td>${student.studentName}</td>
+                <td>${student.mathematics}</td>
+                <td>${student.english}</td>
+                <td>${student.kiswahili}</td>
+                <td>${student.biology}</td>
+                <td>${student.chemistry}</td>
+                <td>${student.physics}</td>
+                <td>${student.computer}</td>
+                <td>${student.totalMarks}</td>
+                <td>${student.averageMarks}</td>
+            `;
+            listBody.appendChild(row);
+        });
+        document.getElementById('list').style.display = 'block';
+    }
+
+    function printMarkList() {
+        const printContent = document.getElementById('list').innerHTML;
+        const originalContent = document.body.innerHTML;
+        document.body.innerHTML = printContent;
+        window.print();
+        document.body.innerHTML = originalContent;
+    }
+</script>
+
+</body>
+</html>
