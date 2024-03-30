@@ -1,6 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shopping List</title>
@@ -78,9 +76,9 @@
         margin: 0 10px;
     }
 </style>
-</head>
-<p>Weclome to this project, take time and test the project functionality:<br> Here.</p>
-<body>
+<style type="text/css" id="operaUserStyle"></style></head>
+<body><p>Make your shopping list by filling the given fields:<br> Here.</p>
+
 
 <div class="container">
     <h1>Shopping List</h1>
@@ -91,7 +89,7 @@
         <input type="text" class="item" placeholder="Item">
         <input type="number" class="quantity" placeholder="Quantity">
         <input type="number" class="price" placeholder="Price (Ksh)">
-    </div>
+    <input type="text" class="item" placeholder="Item"><input type="number" class="quantity" placeholder="Quantity"><input type="number" class="price" placeholder="Price (Ksh)"></div>
     <button onclick="addItem()">Add Item</button>
     <button onclick="generateList()">Generate List</button>
     <div id="list" style="display: none;">
@@ -144,7 +142,7 @@
 
     function generateList() {
         const username = document.getElementById('username').value;
-        document.getElementById('list-title').textContent = Shopping List For ${username};
+        document.getElementById('list-title').textContent = `Shopping List For ${username}`;
         const items = document.getElementsByClassName('item');
         const quantities = document.getElementsByClassName('quantity');
         const prices = document.getElementsByClassName('price');
@@ -185,5 +183,6 @@
     }
 </script>
 
-</body>
-</html>
+
+
+</body></html>
