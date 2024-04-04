@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GHOSTCHAT</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+/* Additional styling for smartphone-like appearance */
+body {
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
+}
+
+.chat-container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    max-width: 400px;
+    padding: 20px;
+}
+
+.message-container {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.message-input {
+    width: calc(100% - 70px);
+}
+
+.send-button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 10px;
+    padding: 10px;
+    width: 60px;
+}
+
+.message {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: fit-content;
+}
+
+.sent {
+    align-self: flex-end;
+    background-color: #007bff;
+    color: #fff;
+}
+
+.received {
+    align-self: flex-start;
+    background-color: #ddd;
+    color: #000;
+}
+</style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="message-container" id="message-container">
+            <!-- Messages will be dynamically inserted here -->
+        </div>
+        <input type="text" class="message-input" id="message-input" placeholder="Type your message...">
+        <button class="send-button" id="send-button">Send</button>
+        <div id="user-status"></div> <!-- User status indicator -->
+    </div>
+
+    <!-- Include Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyDdVWjU2utGwm-too0GPQXRQXZz_0beMzI",
+  authDomain: "ghostchat-c5000.firebaseapp.com",
+  projectId: "ghostchat-c5000",
+  storageBucket: "ghostchat-c5000.appspot.com",
+  messagingSenderId: "344860413147",
+  appId: "1:344860413147:web:ce8d32939f88da901a50fe",
+  measurementId: "G-5SZNRL32BW"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+        // Function to render messages
+        function renderMessages() {
+            const messageContainer = document.getElementById('message-container');
+            messageContainer.innerHTML = '';
+            messages.forEach(message => {
+                const div = document.createElement('div');
+                div.className = `message ${message.sender === 'user' ? 'sent' : 'received'}`;
+                div.textContent = `${message.sender}: ${message.text}`; // Include sender's name or identifier
+                messageContainer.appendChild(div);
+            });
+            // Scroll to bottom
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+        }
+
+        // Function to send a message
+        function sendMessage() {
+            const inputElement = document.getElementById('message-input');
+            const messageText = inputElement.value.trim();
+            if (messageText !== '') {
+                // Write the message to the Firebase Realtime Database
+                database.ref('messages').push({
+                    text: messageText,
+                    sender: 'User A' // You can replace 'User A' with actual sender's name or identifier
+                });
+                // Clear input field
+                inputElement.value = '';
+            }
+        }
+
+        // Event listener for send button click
+        document.getElementById('send-button').addEventListener('click', sendMessage);
+
+        // Event listener for pressing Enter key in the message input field
+        document.getElementById('message-input').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Array to store messages
+        let messages = [];
+
+        // Function to fetch messages from Firebase Realtime Database
+        function fetchMessagesFromFirebase() {
+            database.ref('messages').on('child_added', snapshot => {
+                const message = snapshot.val();
+                messages.push(message);
+                renderMessages();
+            });
+        }
+
+        // Call the function to fetch messages from Firebase Realtime Database
+        fetchMessagesFromFirebase();
+
+        // Function to indicate user online status
+        function indicateUserOnline() {
+            const userStatus = document.getElementById('user-status');
+            userStatus.textContent = 'User Online'; // Display user online status
+            setTimeout(() => {
+                userStatus.textContent = ''; // Clear status after a certain time
+            }, 5000); // Adjust the duration as needed
+        }
+
+        // Call the function to indicate user online
+        indicateUserOnline();
+    </script>
+</body>
+</html>
